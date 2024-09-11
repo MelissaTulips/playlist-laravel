@@ -42,14 +42,18 @@
                         </tbody>
                     </table>
                 </div>
-        </div>
-            <select>  
-                <option value="Select">Select</option>
-                    @foreach ($playlist->songs as $song)
-                        <option value="{{ $song->title }}">{{ $song->title }}</option>  
-                    @endforeach
-        </select>   
+                <form action="{{ route('playlist.addSong', $playlist->id) }}" method="POST">
+            @csrf
+            <select name="song_id" class="border rounded p-2">
+                <option value="">Select a song</option>
+                @foreach ($songs as $song)
+                    <option value="{{ $song->id }}">{{ $song->title }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
+                Add
+            </button>
+        </form>
     </div>
 </x-app-layout>
-
 

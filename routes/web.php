@@ -4,6 +4,8 @@ use App\Http\Controllers\SongController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/playlist/{id}/add-song', [PlaylistController::class, 'addSong'])->name('playlist.addSong');
+
 Route::get('/', function () {
     return view('welcome');
 });

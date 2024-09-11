@@ -43,13 +43,22 @@ class PlaylistController extends Controller
         return redirect('/playlist')->with('success', 'Playlist created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Playlist $playlist)
-    {
-        return view('playlist.show', ['playlist' => $playlist]);
-    }
+    // /**
+    //  * Display the specified resource.
+    //  */
+    // public function show(Playlist $playlist)
+    // {
+    //     return view('playlist.show', ['playlist' => $playlist]);
+    // }
+
+    public function show($id)
+{
+    $playlist = Playlist::with('songs')->findOrFail($id); // Fetch the playlist with its songs
+    $songs = Song::all(); // Fetch all songs
+
+    return view('playlist.show', compact('playlist', 'songs')); // Pass both to the view
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -95,4 +104,20 @@ class PlaylistController extends Controller
 
         return redirect('/playlist')->with('success', 'Playlist deleted successfully!');
     }
+
+    public function addSong(Request $request, $id)
+    {
+        $playlist = Playlist::findOrFail($id);
+        $songId = $request->input('song_id');
+
+        if ($songId) {
+            $song = Song::find($songId);
+            if ($song && !$playlist->songs->contains($songId)) {
+                $playlist->songs()->attach($songId);
+            }
+        }
+
+        return redirect()->route('playlist.show', $id)->with('success', 'Song added to playlist!');
+    }
+
 }
